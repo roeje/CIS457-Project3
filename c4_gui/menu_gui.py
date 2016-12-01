@@ -3,7 +3,7 @@ from Tkinter import *
 root = Tk()
 frame = Frame(root)
 
-bottomframe = Frame(root, height=480, width = 640)
+bottomframe = Frame(root, height=480, width=640)
 def send_message():
     messageText = messageBox.get("1.0", END)
     print messageText
