@@ -17,12 +17,13 @@ def main():
         if turn == playerOne:
             # Human player's turn.
             column = gui.getPlayerMove(game.board, showHelp)
-            print column
             game.place_token(turn, column)
             if showHelp:
                 # turn off help arrow after the first move
                 showHelp = False
-            if game.check_winner():
+            print game.check_winner()
+            if game.check_winner() != -1:
+                print 'oops'
                 winnerImg = gui.HUMANWINNERIMG
                 break
             turn = playerTwo  # switch to other player's turn
@@ -30,7 +31,8 @@ def main():
             if showHelp:
                 # turn off help arrow after the first move
                 showHelp = False
-            if game.check_winner():
+            if game.check_winner() != -1:
+                print "in hurrr"
                 winnerImg = gui.HUMANWINNERIMG
                 break
             turn = playerOne  # switch to other player's turn

@@ -3,7 +3,7 @@ from pygame.locals import *
 class Gui:
 
     def __init__ (self):
-        global FPS, BOARDWIDTH, BOARDHEIGHT, SPACESIZE, FPS, WINDOWWIDTH, WINDOWWIDTH
+        global FPS, BOARDWIDTH, BOARDHEIGHT, SPACESIZE, FPSCLOCK, WINDOWWIDTH, WINDOWWIDTH
         global XMARGIN, YMARGIN, BRIGHTBLUE, WHITE, BGCOLOR, TEXTCOLOR, RED, BLACK, EMPTY
         global playerOne, playerTwo
         # Game Variables
@@ -162,9 +162,7 @@ class Gui:
                     if tokeny < YMARGIN and tokenx > XMARGIN and tokenx < WINDOWWIDTH - XMARGIN:
                         # let go at the top of the screen.
                         column = int((tokenx - XMARGIN) / SPACESIZE)
-                        print 'here'
                         if self.isValidMove(board, column):
-                            print 'there'
                             self.animateDroppingToken(board, column, RED)
                             board[column][self.getLowestEmptySpace(board, column)] = RED
                             self.drawBoard(board)
@@ -220,15 +218,14 @@ class Gui:
         dropSpeed = 1.0
 
         lowestEmptySpace = self.getLowestEmptySpace(board, column)
-        print lowestEmptySpace
         while True:
             y += int(dropSpeed)
             dropSpeed += 0.5
             if int((y - YMARGIN) / SPACESIZE) >= lowestEmptySpace:
                 return
-                self.drawBoard(board, {'x':x, 'y':y, 'color':color})
+            self.drawBoard(board, {'x':x, 'y':y, 'color':color})
             pygame.display.update()
-            FPSCLOCK.tick()
+            self.FPSCLOCK.tick()
 
     def isBoardFull(self, board):
         # Returns True if there are no empty spaces anywhere on the board.
@@ -270,9 +267,9 @@ class Gui:
 
     def getLowestEmptySpace(self, board, column):
         # Return the row number of the lowest empty row in the given column.
-        for y in range(BOARDHEIGHT-1, -1, -1):
-            if board[column][y] == EMPTY:
-                return y
+        for row in range(0, 5):
+            if (board[row][column] == -1):
+                return row
         return -1
 
     def getNewBoard(self):
