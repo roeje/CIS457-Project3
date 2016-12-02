@@ -8,32 +8,37 @@ from pygame.locals import *
 def main():
     game = c4_engine.Game(6, 7, 4)
     gui = pygameGUI.Gui()
-    playerOne = 'playerOne'
-    playerTwo = 'playerTwo'
+    playerOne = 0
+    playerTwo = 1
     # Set up a blank board data structure.
     turn = playerOne
     showHelp = True
     while True:  # main game loop
         if turn == playerOne:
+            print 'hi'
             # Human player's turn.
             column = gui.getPlayerMove(game.board, showHelp)
+            gui.animateDroppingToken(game.board, column, 0)
             game.place_token(turn, column)
+            gui.drawBoard(game.board)
+            pygame.display.update()
             if showHelp:
                 # turn off help arrow after the first move
                 showHelp = False
-            print game.check_winner()
             if game.check_winner() != -1:
                 print 'oops'
                 winnerImg = gui.HUMANWINNERIMG
+                gui.mainLoop(game.board, gui.HUMANWINNERIMG)
                 break
             turn = playerTwo  # switch to other player's turn
         else:
+            print 'fish'
             if showHelp:
                 # turn off help arrow after the first move
                 showHelp = False
             if game.check_winner() != -1:
-                print "in hurrr"
                 winnerImg = gui.HUMANWINNERIMG
+                gui.mainLoop(game.board, gui.HUMANWINNERIMG)
                 break
             turn = playerOne  # switch to other player's turn
 
@@ -41,9 +46,7 @@ def main():
             # A completely filled board means it's a tie.
             winnerImg = gui.TIEWINNERIMG
             break
-
-    while True:
-        gui.mainLoop(game.board, winnerImg)
+        # game.print_formated()
 
     # # Start the game loop.
     # while (1):

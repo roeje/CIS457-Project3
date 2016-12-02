@@ -28,8 +28,8 @@ class Gui:
         RED = 'red'
         BLACK = 'black'
         EMPTY = None
-        playerOne = 'playerOne'
-        playerTwo = 'playerTwo'
+        playerOne = 1
+        playerTwo = 2
 
         pygame.init()
         self.FPSCLOCK = pygame.time.Clock()
@@ -163,10 +163,10 @@ class Gui:
                         # let go at the top of the screen.
                         column = int((tokenx - XMARGIN) / SPACESIZE)
                         if self.isValidMove(board, column):
-                            self.animateDroppingToken(board, column, RED)
-                            board[column][self.getLowestEmptySpace(board, column)] = RED
-                            self.drawBoard(board)
-                            pygame.display.update()
+                           #  self.animateDroppingToken(board, column, RED)
+                           # board[column][self.getLowestEmptySpace(board, column)] = RED
+                           #  self.drawBoard(board)
+                           #  pygame.display.update()
                             return column
                     tokenx, tokeny = None, None
                     draggingToken = False
@@ -218,6 +218,7 @@ class Gui:
         dropSpeed = 1.0
 
         lowestEmptySpace = self.getLowestEmptySpace(board, column)
+        print lowestEmptySpace
         while True:
             y += int(dropSpeed)
             dropSpeed += 0.5
