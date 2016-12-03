@@ -4,7 +4,7 @@
 # it behaved more like an simple attribute instead of an object.
 class Game:
 
-    def __init__ ( self, height, width, row_len ):
+    def __init__(self, height, width, row_len):
         self.height = height
         self.width = width
         self.row_len = row_len

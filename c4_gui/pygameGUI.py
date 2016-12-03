@@ -1,14 +1,17 @@
 import random, copy, sys, pygame
 from pygame.locals import *
+
 class Gui:
 
-    def __init__ (self):
+    def __init__ (self, height, width):
+
         global FPS, BOARDWIDTH, BOARDHEIGHT, SPACESIZE, FPSCLOCK, WINDOWWIDTH, WINDOWWIDTH
         global XMARGIN, YMARGIN, BRIGHTBLUE, WHITE, BGCOLOR, TEXTCOLOR, RED, BLACK, EMPTY
         global playerOne, playerTwo
+
         # Game Variables
-        BOARDWIDTH = 7  # how many spaces wide the board is
-        BOARDHEIGHT = 6  # how many spaces tall the board is
+        BOARDWIDTH = width  # how many spaces wide the board is
+        BOARDHEIGHT = height  # how many spaces tall the board is
 
         SPACESIZE = 50  # size of the tokens and individual board spaces in pixels
 
@@ -19,7 +22,7 @@ class Gui:
         XMARGIN = int((WINDOWWIDTH - BOARDWIDTH * SPACESIZE) / 2)
         YMARGIN = int((WINDOWHEIGHT - BOARDHEIGHT * SPACESIZE) / 2)
 
-        BRIGHTBLUE = (0, 50, 255)
+        BRIGHTBLUE = (0, 1, 255)
         WHITE = (255, 255, 255)
 
         BGCOLOR = BRIGHTBLUE
@@ -27,14 +30,14 @@ class Gui:
 
         RED = 'red'
         BLACK = 'black'
-        EMPTY = None
+        EMPTY = -1
         playerOne = 1
         playerTwo = 2
 
         pygame.init()
         self.FPSCLOCK = pygame.time.Clock()
         self.DISPLAYSURF = pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT))
-        pygame.display.set_caption('Four in a Row')
+        pygame.display.set_caption('Net Four')
 
         self.REDPILERECT = pygame.Rect(int(SPACESIZE / 2), WINDOWHEIGHT - int(3 * SPACESIZE / 2), SPACESIZE, SPACESIZE)
         self.BLACKPILERECT = pygame.Rect(WINDOWWIDTH - int(3 * SPACESIZE / 2), WINDOWHEIGHT - int(3 * SPACESIZE / 2), SPACESIZE,
@@ -63,8 +66,6 @@ class Gui:
         #
 
     def runGame(self):
-
-
         # Set up a blank board data structure.
         mainBoard = self.getNewBoard()
         turn = playerOne
@@ -89,7 +90,7 @@ class Gui:
                     break
                 turn = playerOne # switch to other player's turn
 
-            if self.isBoardFull(mainBoard):
+            if self.check_full_board(mainBoard):
                 # A completely filled board means it's a tie.
                 winnerImg = self.TIEWINNERIMG
                 break
@@ -162,9 +163,9 @@ class Gui:
                     if tokeny < YMARGIN and tokenx > XMARGIN and tokenx < WINDOWWIDTH - XMARGIN:
                         # let go at the top of the screen.
                         column = int((tokenx - XMARGIN) / SPACESIZE)
-                        if self.isValidMove(board, column):
+                        if self.check_full_col(board, column):
                            #  self.animateDroppingToken(board, column, RED)
-                           # board[column][self.getLowestEmptySpace(board, column)] = RED
+                           # # board[column][self.isValidMove(board, column)] = RED
                            #  self.drawBoard(board)
                            #  pygame.display.update()
                             return column
@@ -190,6 +191,7 @@ class Gui:
         for y in range(BOARDWIDTH):
             for x in range(BOARDHEIGHT):
                 spaceRect.topleft = (XMARGIN + (x * SPACESIZE), YMARGIN + (y * SPACESIZE))
+                # print "Board at: " + str(x) + ", " + str(y) + " = " + str(board[x][y])
                 if board[x][y] == playerOne:
                     self.DISPLAYSURF.blit(self.REDTOKENIMG, spaceRect)
                 elif board[x][y] == BLACK:
@@ -217,8 +219,9 @@ class Gui:
         y = YMARGIN - SPACESIZE
         dropSpeed = 1.0
 
-        lowestEmptySpace = self.getLowestEmptySpace(board, column)
-        print lowestEmptySpace
+        lowestEmptySpace = self.check_full_col(board, column)
+
+        print 'Is Col:' + str(column) + " not full?     " + str(lowestEmptySpace)
         while True:
             y += int(dropSpeed)
             dropSpeed += 0.5
@@ -228,53 +231,50 @@ class Gui:
             pygame.display.update()
             self.FPSCLOCK.tick()
 
-    def isBoardFull(self, board):
+    def check_full_board(self, board):
         # Returns True if there are no empty spaces anywhere on the board.
-        for x in range(BOARDWIDTH):
-            for y in range(BOARDHEIGHT):
-                if board[x][y] == EMPTY:
+        for row in range(BOARDHEIGHT):
+            for col in range(BOARDWIDTH):
+                if board[row][col] == EMPTY:
                     return False
         return True
 
-    def isValidMove(self, board, column):
+    def check_full_col(self, board, column):
         # Returns True if there is an empty space in the given column.
         # Otherwise returns False.
-        if (board[5][column] == -1):
+        if (board[BOARDHEIGHT - 1][column] == -1):
             return True
         return False
 
-    def isWinner(self, board, tile):
-        # check horizontal spaces
-        for x in range(BOARDWIDTH - 3):
-            for y in range(BOARDHEIGHT):
-                if board[x][y] == tile and board[x+1][y] == tile and board[x+2][y] == tile and board[x+3][y] == tile:
-                    return True
-        # check vertical spaces
-        for x in range(BOARDWIDTH):
-            for y in range(BOARDHEIGHT - 3):
-                if board[x][y] == tile and board[x][y+1] == tile and board[x][y+2] == tile and board[x][y+3] == tile:
-                    return True
-        # check / diagonal spaces
-        for x in range(BOARDWIDTH - 3):
-            for y in range(3, BOARDHEIGHT):
-                if board[x][y] == tile and board[x+1][y-1] == tile and board[x+2][y-2] == tile and board[x+3][y-3] == tile:
-                    return True
-        # check \ diagonal spaces
-        for x in range(BOARDWIDTH - 3):
-            for y in range(BOARDHEIGHT - 3):
-                if board[x][y] == tile and board[x+1][y+1] == tile and board[x+2][y+2] == tile and board[x+3][y+3] == tile:
-                    return True
-        return False
+    def display_update(self):
+        pygame.display.update()
 
-    def getLowestEmptySpace(self, board, column):
-        # Return the row number of the lowest empty row in the given column.
-        for row in range(0, 5):
-            if (board[row][column] == -1):
-                return row
-        return -1
+    # def isWinner(self, board, tile):
+    #     # check horizontal spaces
+    #     for x in range(BOARDWIDTH - 3):
+    #         for y in range(BOARDHEIGHT):
+    #             if board[x][y] == tile and board[x+1][y] == tile and board[x+2][y] == tile and board[x+3][y] == tile:
+    #                 return True
+    #     # check vertical spaces
+    #     for x in range(BOARDWIDTH):
+    #         for y in range(BOARDHEIGHT - 3):
+    #             if board[x][y] == tile and board[x][y+1] == tile and board[x][y+2] == tile and board[x][y+3] == tile:
+    #                 return True
+    #     # check / diagonal spaces
+    #     for x in range(BOARDWIDTH - 3):
+    #         for y in range(3, BOARDHEIGHT):
+    #             if board[x][y] == tile and board[x+1][y-1] == tile and board[x+2][y-2] == tile and board[x+3][y-3] == tile:
+    #                 return True
+    #     # check \ diagonal spaces
+    #     for x in range(BOARDWIDTH - 3):
+    #         for y in range(BOARDHEIGHT - 3):
+    #             if board[x][y] == tile and board[x+1][y+1] == tile and board[x+2][y+2] == tile and board[x+3][y+3] == tile:
+    #                 return True
+    #     return False
 
-    def getNewBoard(self):
-        board = []
-        for x in range(BOARDWIDTH):
-            board.append([EMPTY] * BOARDHEIGHT)
-        return board
+    # def getLowestEmptySpace(self, board, column):
+    #     # Return the row number of the lowest empty row in the given column.
+    #     for row in range(0, 5):
+    #         if (board[row][column] == -1):
+    #             return row
+    #     return -1
