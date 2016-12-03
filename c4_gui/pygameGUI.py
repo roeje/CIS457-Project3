@@ -32,7 +32,7 @@ class Gui:
         BLACK = 'black'
         EMPTY = -1
         playerOne = 1
-        playerTwo = 2
+        playerTwo = 0
 
         pygame.init()
         self.FPSCLOCK = pygame.time.Clock()
@@ -188,13 +188,14 @@ class Gui:
 
         # draw tokens
         spaceRect = pygame.Rect(0, 0, SPACESIZE, SPACESIZE)
-        for y in range(BOARDWIDTH):
-            for x in range(BOARDHEIGHT):
-                spaceRect.topleft = (XMARGIN + (x * SPACESIZE), YMARGIN + (y * SPACESIZE))
+        for y in range(0, BOARDWIDTH):
+            for x in range(0, BOARDHEIGHT):
+                spaceRect.topleft = (XMARGIN + (y * SPACESIZE), YMARGIN + ((5 - x) * SPACESIZE))
+                #spaceRect.topleft = (YMARGIN + (y * SPACESIZE), XMARGIN + (x * SPACESIZE))
                 # print "Board at: " + str(x) + ", " + str(y) + " = " + str(board[x][y])
-                if board[x][y] == playerOne:
+                if board[x][y] == playerTwo:
                     self.DISPLAYSURF.blit(self.REDTOKENIMG, spaceRect)
-                elif board[x][y] == BLACK:
+                elif board[x][y] == playerOne:
                     self.DISPLAYSURF.blit(self.BLACKTOKENIMG, spaceRect)
 
         # draw the extra token

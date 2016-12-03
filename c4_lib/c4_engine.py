@@ -117,8 +117,8 @@ class Game:
 
     # Check winning all winning conditions on entire board.
     def check_winner(self):
-        if (self.check_ver() or self.check_hor() or self.check_diag_left() or self.check_diag_right()):
-            return self.winner
+        # if (self.check_ver() or self.check_hor() or self.check_diag_left() or self.check_diag_right()):
+        #     return self.winner
         if (self.check_full_board()):
             return -5
         return -1

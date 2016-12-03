@@ -4,6 +4,7 @@ import getopt
 import sys
 import random, copy, sys, pygame
 from pygame.locals import *
+from random import randint
 
 def main():
     game = c4_engine.Game(6, 7, 4)
@@ -36,9 +37,11 @@ def main():
             turn = playerTwo  # switch to other player's turn
         else:
             print 'Player Two Turn:'
-            if showHelp:
-                # turn off help arrow after the first move
-                showHelp = False
+            column = randint(0, 5)
+            gui.animateDroppingToken(game.board, column, 'black')
+            game.place_token(turn, column)
+            gui.drawBoard(game.board)
+            gui.display_update()
             if game.check_winner() == playerTwo:
 
                 print 'Winner Found: Player Two'
