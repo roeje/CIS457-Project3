@@ -109,16 +109,17 @@ class Gui:
                     return
 
     def mainLoop(self, board, winnerImg):
-        self.drawBoard(board)
-        self.DISPLAYSURF.blit(winnerImg, self.WINNERRECT)
-        pygame.display.update()
-        self.FPSCLOCK.tick()
-        for event in pygame.event.get():  # event handling loop
-            if event.type == QUIT or (event.type == KEYUP and event.key == K_ESCAPE):
-                pygame.quit()
-                sys.exit()
-            elif event.type == MOUSEBUTTONUP:
-                return
+        while True:
+            self.drawBoard(board)
+            self.DISPLAYSURF.blit(winnerImg, self.WINNERRECT)
+            pygame.display.update()
+            self.FPSCLOCK.tick()
+            for event in pygame.event.get():  # event handling loop
+                if event.type == QUIT or (event.type == KEYUP and event.key == K_ESCAPE):
+                    pygame.quit()
+                    sys.exit()
+                elif event.type == MOUSEBUTTONUP:
+                    return
 
     def animateNetworkMoving(self, board, column):
         x = self.BLACKPILERECT.left
