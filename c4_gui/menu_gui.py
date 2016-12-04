@@ -1,9 +1,14 @@
 import Tkinter
 from Tkinter import *
+import socket
 
 class MainGui:
     root = Tk()
     frame = Frame(root)
+
+
+
+    bottomframe = Frame(root, height=480, width=640)
 
     build_client = None
     build_server = None
@@ -12,8 +17,6 @@ class MainGui:
         self.build_client = client_func
         self.build_server = server_func
 
-
-    bottomframe = Frame(root, height=480, width=640)
     def send_message(self):
         messageText = self.messageBox.get("1.0", END)
         print messageText
@@ -23,19 +26,21 @@ class MainGui:
 
     def join_game(self):
         print 'join'
+        self.build_client(socket.gethostname())
 
-    frame.pack()
-    bottomframe.pack( side = BOTTOM )
+    def run(self):
+        self.frame.pack()
+        self.bottomframe.pack( side = BOTTOM )
 
-    createButton = Button(frame, text="Create a Game", fg="red", width = 60, height = 2, command = create_game)
-    createButton.pack(side = LEFT)
+        createButton = Button(self.frame, text="Create a Game", fg="red", width = 60, height = 2, command = self.create_game)
+        createButton.pack(side = LEFT)
 
-    joinButton = Button(frame, text="Join a Game", fg="blue", width = 60, height = 2, command = join_game)
-    joinButton.pack(side = RIGHT)
+        joinButton = Button(self.frame, text="Join a Game", fg="blue", width = 60, height = 2, command = self.join_game)
+        joinButton.pack(side = RIGHT)
 
-    messageBox = Text(bottomframe, height=5, width=101)
-    messageBox.pack(side = LEFT, expand=2)
+        messageBox = Text(self.bottomframe, height=5, width=101)
+        messageBox.pack(side = LEFT, expand=2)
 
-    messageButton = Button(bottomframe, text ="send", fg="#26e038", command = send_message, height = 5, width = 6)
-    messageButton.pack(side=RIGHT, expand = 2)
-    root.mainloop()
+        messageButton = Button(self.bottomframe, text ="send", fg="#26e038", command = self.send_message, height = 5, width = 6)
+        messageButton.pack(side=RIGHT, expand = 2)
+        self.root.mainloop()

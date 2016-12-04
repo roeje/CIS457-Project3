@@ -42,11 +42,11 @@ class Gui:
         self.REDPILERECT = pygame.Rect(int(SPACESIZE / 2), WINDOWHEIGHT - int(3 * SPACESIZE / 2), SPACESIZE, SPACESIZE)
         self.BLACKPILERECT = pygame.Rect(WINDOWWIDTH - int(3 * SPACESIZE / 2), WINDOWHEIGHT - int(3 * SPACESIZE / 2), SPACESIZE,
                                     SPACESIZE)
-        REDTOKENIMG = pygame.image.load('4row_red.png')
+        REDTOKENIMG = pygame.image.load('red.png')
         self.REDTOKENIMG = pygame.transform.smoothscale(REDTOKENIMG, (SPACESIZE, SPACESIZE))
-        BLACKTOKENIMG = pygame.image.load('4row_black.png')
+        BLACKTOKENIMG = pygame.image.load('blue.png')
         self.BLACKTOKENIMG = pygame.transform.smoothscale(BLACKTOKENIMG, (SPACESIZE, SPACESIZE))
-        BOARDIMG = pygame.image.load('4row_board.png')
+        BOARDIMG = pygame.image.load('grid.png')
         self.BOARDIMG = pygame.transform.smoothscale(BOARDIMG, (SPACESIZE, SPACESIZE))
 
         self.HUMANWINNERIMG = pygame.image.load('4row_humanwinner.png')

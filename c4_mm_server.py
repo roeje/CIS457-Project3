@@ -4,16 +4,24 @@
 import socket               # Import socket module
 import threading
 
-serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+def main():
+    server_data = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # Create a socket object
+    server_msg = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-serversocket.bind((socket.gethostname(), 5555))
-#start listening on server socket
-serversocket.listen(5)
+    host = socket.gethostname()  # Get local machine name
+    data_port = 55555  # Reserve a port for your service.
+    msg_port = 55556
 
-while 1:
-    #accept connections from outside
-    (clientsocket, address) = serversocket.accept()
-    #now do something with the clientsocket
-    #in this case, we'll pretend this is a threaded server
-    ct = client_thread(clientsocket)
-    ct.run()
+    server_data.bind((host, data_port))  # Bind to the port
+    server_msg.bind((host, msg_port))
+
+    print 'Sockets Created, waiting for connections...'
+
+    server_data.listen(5)
+
+    data, addr = server_data.accept()
+
+    print 'Connection made'
+
+if __name__ == "__main__":
+    main()
