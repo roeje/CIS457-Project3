@@ -1,32 +1,41 @@
 import Tkinter
 from Tkinter import *
 
-root = Tk()
-frame = Frame(root)
+class MainGui:
+    root = Tk()
+    frame = Frame(root)
 
-bottomframe = Frame(root, height=480, width=640)
-def send_message():
-    messageText = messageBox.get("1.0", END)
-    print messageText
+    build_client = None
+    build_server = None
 
-def create_game():
-    print 'game'
+    def __init__(self, server_func, client_func):
+        self.build_client = client_func
+        self.build_server = server_func
 
-def join_game():
-    print 'join'
 
-frame.pack()
-bottomframe.pack( side = BOTTOM )
+    bottomframe = Frame(root, height=480, width=640)
+    def send_message(self):
+        messageText = self.messageBox.get("1.0", END)
+        print messageText
 
-createButton = Button(frame, text="Create a Game", fg="red", width = 60, height = 2, command = create_game)
-createButton.pack(side = LEFT)
+    def create_game(self):
+        print 'game'
 
-joinButton = Button(frame, text="Join a Game", fg="blue", width = 60, height = 2, command = join_game)
-joinButton.pack(side = RIGHT)
+    def join_game(self):
+        print 'join'
 
-messageBox = Text(bottomframe, height=5, width=101)
-messageBox.pack(side = LEFT, expand=2)
+    frame.pack()
+    bottomframe.pack( side = BOTTOM )
 
-messageButton = Button(bottomframe, text ="send", fg="#26e038", command = send_message, height = 5, width = 6)
-messageButton.pack(side=RIGHT, expand = 2)
-root.mainloop()
+    createButton = Button(frame, text="Create a Game", fg="red", width = 60, height = 2, command = create_game)
+    createButton.pack(side = LEFT)
+
+    joinButton = Button(frame, text="Join a Game", fg="blue", width = 60, height = 2, command = join_game)
+    joinButton.pack(side = RIGHT)
+
+    messageBox = Text(bottomframe, height=5, width=101)
+    messageBox.pack(side = LEFT, expand=2)
+
+    messageButton = Button(bottomframe, text ="send", fg="#26e038", command = send_message, height = 5, width = 6)
+    messageButton.pack(side=RIGHT, expand = 2)
+    root.mainloop()

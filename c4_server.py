@@ -15,7 +15,6 @@ def main():
     port = 5555  # Reserve a port for your service.
     s.bind((host, port))  # Bind to the port
 
-
     game = c4_engine.Game(6, 7, 4)
     gui = pygameGUI.Gui(6, 7)
 
