@@ -2,6 +2,7 @@
 import socket
 from c4_gui import menu_gui
 import c4_client as c
+import c4_server as s
 
 
 def main():
@@ -24,10 +25,9 @@ def create_client_game(host):
     # client.run()
     return
 
-
 def create_server_game():
+    server = s.Server()
     return
-
 
 if __name__ == "__main__":
     main()

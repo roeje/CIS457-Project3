@@ -6,8 +6,6 @@ class MainGui:
     root = Tk()
     frame = Frame(root)
 
-
-
     bottomframe = Frame(root, height=480, width=640)
 
     build_client = None
@@ -23,6 +21,7 @@ class MainGui:
 
     def create_game(self):
         print 'game'
+        self.build_server()
 
     def join_game(self):
         print 'join'

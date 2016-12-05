@@ -164,12 +164,14 @@ class Gui:
                     if tokeny < YMARGIN and tokenx > XMARGIN and tokenx < WINDOWWIDTH - XMARGIN:
                         # let go at the top of the screen.
                         column = int((tokenx - XMARGIN) / SPACESIZE)
-                        if self.check_full_col(board, column):
-                           #  self.animateDroppingToken(board, column, RED)
-                           # # board[column][self.isValidMove(board, column)] = RED
-                           #  self.drawBoard(board)
-                           #  pygame.display.update()
-                            return column
+
+                        # if self.check_full_col(board, column):
+                        #    #  self.animateDroppingToken(board, column, RED)
+                        #    # # board[column][self.isValidMove(board, column)] = RED
+                        #    #  self.drawBoard(board)
+                        #    #  pygame.display.update()
+
+                        return column
                     tokenx, tokeny = None, None
                     draggingToken = False
             if tokenx != None and tokeny != None:

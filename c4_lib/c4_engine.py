@@ -42,8 +42,8 @@ class Game:
     def check_for_col_height(self, col):
         for row in range(0, self.height):
             if (self.board[row][col] == -1):
-                return row
-        return -1
+                return True
+        return False
 
     # Insert a token into board for specific player if conditions are met.
     def place_token(self, player, col):
