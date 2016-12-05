@@ -8,9 +8,10 @@ import random, copy, sys, pygame
 from pygame.locals import *
 from random import randint
 import socket, pickle                # Import socket module
+from threading import Thread
 
 
-class Client:
+class Client(Thread):
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     host = 0
     port = 5555
@@ -23,7 +24,7 @@ class Client:
     showHelp = True
 
     def __init__(self, host):
-
+        Thread.__init__(self)
         self.host = host  # Get local machine name
         self.s.connect((host, self.port))
 
@@ -45,7 +46,7 @@ class Client:
                 # Get other player's move
                 column = int(self.s.recv(1024))
 
-                self.gui.animateDroppingToken(self.game.board, column, 'black')
+                self.gui.animateDroppingToken(self.game.board, column, 'red')
                 self.game.place_token(self.turn, column)
                 self.gui.drawBoard(self.game.board)
                 self.gui.display_update()
@@ -59,8 +60,16 @@ class Client:
                 print 'Player One Turn:'
 
                 column = self.gui.getPlayerMove(self.game.board, self.showHelp)
-                self.gui.animateDroppingToken(self.game.board, column, 'red')
-                self.game.place_token(self.turn, column)
+
+                if self.game.check_for_col_height(column) != -1:
+                    self.gui.animateDroppingToken(self.game.board, column, 'black')
+                    self.game.place_token(self.turn, column)
+                else:
+                    print 'Col #' + str(column) + ' is full... breaking'
+                    self.gui.drawBoard(self.game.board)
+                    self.gui.display_update()
+                    break
+
                 self.gui.drawBoard(self.game.board)
                 self.gui.display_update()
 

@@ -1,7 +1,8 @@
 import random, copy, sys, pygame
 from pygame.locals import *
+from threading import Thread
 
-class Gui:
+class Gui():
 
     def __init__ (self, height, width):
 

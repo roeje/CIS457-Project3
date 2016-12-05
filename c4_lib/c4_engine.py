@@ -42,8 +42,8 @@ class Game:
     def check_for_col_height(self, col):
         for row in range(0, self.height):
             if (self.board[row][col] == -1):
-                return True
-        return False
+                return row
+        return -1
 
     # Insert a token into board for specific player if conditions are met.
     def place_token(self, player, col):
@@ -117,8 +117,8 @@ class Game:
 
     # Check winning all winning conditions on entire board.
     def check_winner(self):
-        # if (self.check_ver() or self.check_hor() or self.check_diag_left() or self.check_diag_right()):
-        #     return self.winner
-        if (self.check_full_board()):
-            return -5
+        if (self.check_ver() or self.check_hor() or self.check_diag_left() or self.check_diag_right()):
+            return self.winner
+        # if (self.check_full_board()):
+        #     return -5
         return -1

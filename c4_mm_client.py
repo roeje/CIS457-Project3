@@ -1,5 +1,6 @@
 #!/usr/bin/python           # This is server.py file
 import socket
+from threading import Thread
 from c4_gui import menu_gui
 import c4_client as c
 import c4_server as s
@@ -16,17 +17,25 @@ def main():
     server_data.connect((host, data_port))  # Bind to the port
     # server_msg.connect((host, msg_port))
 
-    gui = menu_gui.MainGui(create_server_game, create_client_game)
-    gui.run()
+    server_data.send("Connection Successful...")
+    # gui = menu_gui.MainGui(create_server_game, create_client_game)
+    thread1 = menu_gui.MainGui(create_server_game, create_client_game)
+    thread1.start()
+    print 'Main gui thread started'
+
+    data = server_data.recv(1024)
+    print " Client2 received data:", data
 
 
 def create_client_game(host):
-    client = c.Client(host)
-    # client.run()
+
+    thread2 = c.Client(host)
+    thread2.start()
     return
 
 def create_server_game():
-    server = s.Server()
+    thread3 = s.Server()
+    thread3.start()
     return
 
 if __name__ == "__main__":

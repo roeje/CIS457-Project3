@@ -2,9 +2,10 @@
 
 from c4_lib import c4_engine
 from c4_gui import pygameGUI
+from threading import Thread
 import socket # Import socket module
 
-class Server:
+class Server(Thread):
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # Create a socket object
     host = socket.gethostname()  # Get local machine name
     port = 5555  # Reserve a port for your service.
@@ -18,6 +19,7 @@ class Server:
     showHelp = True
 
     def __init__(self):
+        Thread.__init__(self)
         self.s.bind((self.host, self.port))  # Bind to the port
 
         self.game = c4_engine.Game(6, 7, 4)
@@ -32,7 +34,6 @@ class Server:
 
         self.c, self.addr = self.s.accept()  # Establish connection with client.
         print 'Got connection from', self.addr
-
         self.run()
 
     def run(self):
@@ -41,7 +42,7 @@ class Server:
                 print 'Player One Turn:'
 
                 column = self.gui.getPlayerMove(self.game.board, self.showHelp)
-                if self.game.check_for_col_height(column):
+                if self.game.check_for_col_height(column) != -1:
                     print 'Col #' + str(column) + ' is not full'
                     self.gui.animateDroppingToken(self.game.board, column, 'red')
                     self.game.place_token(self.turn, column)
@@ -49,6 +50,8 @@ class Server:
                     # self.gui.display_update()
                 else:
                     print 'Col #' + str(column) + ' is full... breaking'
+                    self.gui.drawBoard(self.game.board)
+                    self.gui.display_update()
                     break
 
                 self.gui.drawBoard(self.game.board)
@@ -85,6 +88,7 @@ class Server:
                 self.turn = self.playerOne  # switch to other player's turn
 
             if self.game.check_full_board():
+
 
                 winnerImg = self.gui.TIEWINNERIMG
                 break

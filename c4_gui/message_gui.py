@@ -8,9 +8,9 @@ class MainGui(Thread):
     frame = Frame(root)
     messageBox = None
 
-    bottomframe = Frame(root, height=480, width=640)
+    bottomframe = Frame(root, height=100, width=640)
 
-    build_client = None
+    send_message = None
     build_server = None
 
     def __init__(self, server_func, client_func):
