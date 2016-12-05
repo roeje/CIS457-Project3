@@ -37,6 +37,7 @@ server_data.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 host = socket.gethostname()  # Get local machine name
 data_port = 55555  # Reserve a port for your service.
 threads = []
+datalist = []
 server_data.bind((host, data_port))  # Bind to the port
 print 'Sockets Created, waiting for connections...'
 
@@ -45,9 +46,10 @@ while True:
     print "Multithreaded Python server : Waiting for connections from TCP clients..."
     (conn, (ip, port)) = server_data.accept()
     print 'Connection made'
-    newthread = ClientThread(ip, port)
+    newthread = ClientThread(ip, port, datalist)
     newthread.start()
     threads.append(newthread)
+
 
 for t in threads:
     t.join()

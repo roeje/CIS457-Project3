@@ -1,16 +1,17 @@
 #!/usr/bin/python           # This is server.py file
-import socket
+import socket, pickle
 from threading import Thread
 from c4_gui import menu_gui
 import c4_client as c
 import c4_server as s
 
-server_data = None
-def main():
-    server_data = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # Create a socket object
-    server_msg = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+server_data = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # Create a socket objec
+server_msg = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+host = socket.gethostname()  # Get local machine name
 
-    host = socket.gethostname()  # Get local machine name
+def main():
+
+
     data_port = 55555  # Reserve a port for your service.
     msg_port = 55556
 
@@ -18,12 +19,7 @@ def main():
     # server_msg.connect((host, msg_port))
 
     server_data.send("Connection Successful...")
-
-
-
-
-    data = server_data.recv(1024)
-    print " Client2 received data:", data
+    startup()
 
 def startup():
     commandNotFound = True
@@ -36,11 +32,14 @@ def startup():
             list_games()
 
 def list_games():
-    game_list = server_data.recieve(1024)
+    server_data.send('getusers')
+    game_list = pickle.loads(server_data.recv(1024))
 
+    print game_list
     count = 1
     for game in game_list:
         print "Game No: ", count, "  Username: ", game[0], "  IP Adress: ", game[1]
+        count += 1
 
     validGame = False
     selected_game = None
@@ -64,13 +63,13 @@ def list_games():
 def start_server():
     print '******************** Starting C4 Server ********************\n'
     username = raw_input('Enter a username: ')
+
+    server_data.send('postusers')
+    server_data.send(username)
+    server_data.send(host)
     print 'Game Published to Match Making Server\n'
     print 'Starting Game...'
     create_server_game()
-
-def post_game(username):
-
-    return
 
 def create_client_game(host):
 
