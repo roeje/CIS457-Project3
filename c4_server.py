@@ -43,8 +43,9 @@ class Server(Thread):
 
                 column = self.gui.getPlayerMove(self.game.board, self.showHelp)
                 if self.game.check_for_col_height(column) != -1:
+                    col = self.game.check_for_col_height(column)
                     print 'Col #' + str(column) + ' is not full'
-                    self.gui.animateDroppingToken(self.game.board, column, 'red')
+                    self.gui.animateDroppingToken(self.game.board, column, 'red', col)
                     self.game.place_token(self.turn, column)
                     # self.gui.drawBoard(self.game.board)
                     # self.gui.display_update()
@@ -74,8 +75,8 @@ class Server(Thread):
 
                 # Get other player's move
                 column = int(self.c.recv(1024))
-
-                self.gui.animateDroppingToken(self.game.board, column, 'black')
+                col = self.game.check_for_col_height(column)
+                self.gui.animateDroppingToken(self.game.board, column, 'black', col)
                 self.game.place_token(self.turn, column)
                 self.gui.drawBoard(self.game.board)
                 self.gui.display_update()
@@ -88,7 +89,6 @@ class Server(Thread):
                 self.turn = self.playerOne  # switch to other player's turn
 
             if self.game.check_full_board():
-
 
                 winnerImg = self.gui.TIEWINNERIMG
                 break

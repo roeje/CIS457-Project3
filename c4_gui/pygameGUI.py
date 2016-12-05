@@ -171,12 +171,12 @@ class Gui(Thread):
         self.DISPLAYSURF.blit(self.REDTOKENIMG, self.REDPILERECT) # red on the left
         self.DISPLAYSURF.blit(self.BLACKTOKENIMG, self.BLACKPILERECT) # black on the right
 
-    def animateDroppingToken(self, board, column, color):
+    def animateDroppingToken(self, board, column, color, col):
         x = XMARGIN + column * SPACESIZE
         y = YMARGIN - SPACESIZE
         dropSpeed = 1.0
 
-        lowestEmptySpace = self.check_full_col(board, column)
+        lowestEmptySpace = col
 
         print 'Is Col:' + str(column) + " not full?     " + str(lowestEmptySpace)
         while True:

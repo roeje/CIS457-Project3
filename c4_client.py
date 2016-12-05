@@ -45,8 +45,9 @@ class Client(Thread):
 
                 # Get other player's move
                 column = int(self.s.recv(1024))
+                col = self.game.check_for_col_height(column)
 
-                self.gui.animateDroppingToken(self.game.board, column, 'red')
+                self.gui.animateDroppingToken(self.game.board, column, 'red', col)
                 self.game.place_token(self.turn, column)
                 self.gui.drawBoard(self.game.board)
                 self.gui.display_update()
@@ -62,7 +63,8 @@ class Client(Thread):
                 column = self.gui.getPlayerMove(self.game.board, self.showHelp)
 
                 if self.game.check_for_col_height(column) != -1:
-                    self.gui.animateDroppingToken(self.game.board, column, 'black')
+                    col = self.game.check_for_col_height(column)
+                    self.gui.animateDroppingToken(self.game.board, column, 'black', col)
                     self.game.place_token(self.turn, column)
                 else:
                     print 'Col #' + str(column) + ' is full... breaking'
