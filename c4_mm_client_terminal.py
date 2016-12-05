@@ -28,6 +28,17 @@ def main():
 def startup():
     print
 
+def start_server():
+    print '******************** Starting C4 Server ********************\n'
+    username = raw_input('Enter a username: ')
+    print 'Game Published to Match Making Server\n'
+    print 'Starting Game...'
+    create_server_game()
+
+def post_game(username):
+
+    return
+
 def create_client_game(host):
 
     thread2 = c.Client(host)
