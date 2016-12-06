@@ -70,7 +70,7 @@ class Client(Thread):
                     print 'Col #' + str(column) + ' is full... breaking'
                     self.gui.drawBoard(self.game.board)
                     self.gui.display_update()
-                    break
+                    continue
 
                 self.gui.drawBoard(self.game.board)
                 self.gui.display_update()
