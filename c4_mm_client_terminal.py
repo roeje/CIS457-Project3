@@ -25,7 +25,7 @@ def main():
 def startup():
     commandNotFound = True
     while commandNotFound:
-        command = raw_input("Type 'create' to create a game or 'join' to join a game")
+        command = raw_input("Type 'create' to create a game or 'join' to join a game: ")
         if command.lower() == "create":
             start_server()
             commandNotFound = False
@@ -35,19 +35,19 @@ def startup():
 def list_games():
     server_data.send('getusers')
     data = server_data.recv(500)
-    print data
     game_list = pickle.loads(data)
-
-    print game_list
     count = 1
+    print '\n'
     for game in game_list:
+
         print "Game No: ", count, "  Username: ", game[0], "  IP Adress: ", game[1]
         count += 1
 
     validGame = False
     selected_game = None
     while not validGame:
-        gameNumString = raw_input("Enter the number of the game you wish to join.")
+        print '\n'
+        gameNumString = raw_input("Enter the number of the game you wish to join: ")
         try:
             gameNum = int(gameNumString)
         except ValueError:
@@ -66,13 +66,13 @@ def list_games():
     # start_msg_service()
     startup()
 
-def start_msg_service():
-    print 'starting msg service'
+# def start_msg_service():
+#     # print 'starting msg service'
             
 
 def start_server():
     print '******************** Starting C4 Server ********************\n'
-    username = raw_input('Enter a username: ')
+    username = raw_input('Enter A Username: ')
 
     server_data.send('postusers')
     server_data.send(username + '/' + host)

@@ -41,9 +41,6 @@ class Client(Thread):
 
         while True:  # main game loop
             if self.turn == self.playerOne:
-                print 'Player Two Turn:'
-
-                # Get other player's move
                 column = int(self.s.recv(1024))
                 col = self.game.check_for_col_height(column)
 
@@ -52,27 +49,21 @@ class Client(Thread):
                 self.gui.drawBoard(self.game.board)
                 self.gui.display_update()
                 if self.game.check_winner() == self.playerOne:
-                    print 'Winner Found: Player One'
                     winnerImg = self.gui.PLAYERONEWIN
                     self.gui.mainLoop(self.game.board, 0)
                     break
                 elif self.game.check_winner() == self.playerTwo:
-                    print 'Winner Found: Player One'
                     winnerImg = self.gui.PLAYERONEWIN
                     self.gui.mainLoop(self.game.board, 1)
                     break
                 self.turn = self.playerTwo  # switch to other player's turn
             else:
-                print 'Player One Turn:'
-
                 column = self.gui.getPlayerMove(self.game.board, self.showHelp)
-
                 if self.game.check_for_col_height(column) != -1:
                     col = self.game.check_for_col_height(column)
                     self.gui.animateDroppingToken(self.game.board, column, 'black', col)
                     self.game.place_token(self.turn, column)
                 else:
-                    print 'Col #' + str(column) + ' is full... breaking'
                     self.gui.drawBoard(self.game.board)
                     self.gui.display_update()
                     continue
@@ -87,19 +78,16 @@ class Client(Thread):
                     # turn off help arrow after the first move
                     self.showHelp = False
                 if self.game.check_winner() == self.playerTwo:
-                    print 'Winner Found: Player Two'
                     winnerImg = self.gui.PLAYERONEWIN
                     self.gui.mainLoop(self.game.board, 1)
                     break
                 elif self.game.check_winner() == self.playerOne:
-                    print 'Winner Found: Player One'
                     winnerImg = self.gui.PLAYERONEWIN
                     self.gui.mainLoop(self.game.board, 0)
                     break
                 self.turn = self.playerOne  # switch to other player's turn
 
             if self.game.check_full_board():
-
                 winnerImg = self.gui.TIEWINNERIMG
                 break
 

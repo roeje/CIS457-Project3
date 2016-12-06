@@ -25,12 +25,10 @@ class ClientThread(threading.Thread):
             if (cmd.lower() == 'removeuser'):
                 print 'Removing user'
                 username = server_data.recv(1024)
-
                 tmp = None
                 for game in self.database:
                     if game[0] == username:
                         tmp = game
-
                 self.database.remove(tmp)
                 print self.database
                 print 'User: ' + username + ' removed from database'
@@ -45,15 +43,15 @@ class ClientThread(threading.Thread):
                 print 'Users successfully sent'
 
             if (cmd.lower() == 'postusers'):
-                print 'posting user information'
-                data = conn.recv(1024).split('/')
+                print 'Posting user information'
 
-                print data[0]
-                print data[1]
+                threadLock.acquire()
+                data = conn.recv(1024).split('/')
 
                 self.database.append((data[0], data[1]))
                 print 'data successfully inserted'
                 print self.database
+                threadLock.release()
 
 
 server_data = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # Create a socket object

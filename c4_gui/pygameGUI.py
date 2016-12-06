@@ -85,8 +85,10 @@ class Gui(Thread):
             for event in pygame.event.get():  # event handling loop
                 if event.type == QUIT or (event.type == KEYUP and event.key == K_ESCAPE):
                     pygame.quit()
-                    sys.exit()
+                    # sys.exit()
                 elif event.type == MOUSEBUTTONUP:
+                    pygame.quit()
+                    # sys.exit()
                     return
 
     def animateNetworkMoving(self, board, column):
@@ -209,7 +211,6 @@ class Gui(Thread):
 
         lowestEmptySpace = col
 
-        print 'Is Col:' + str(column) + " not full?     " + str(lowestEmptySpace)
         while True:
             y += int(dropSpeed)
             dropSpeed += 0.5
@@ -218,21 +219,6 @@ class Gui(Thread):
             self.drawBoard(board, {'x':x, 'y':y, 'color':color})
             pygame.display.update()
             self.FPSCLOCK.tick()
-
-    # def check_full_board(self, board):
-    #     # Returns True if there are no empty spaces anywhere on the board.
-    #     for row in range(BOARDHEIGHT):
-    #         for col in range(BOARDWIDTH):
-    #             if board[row][col] == EMPTY:
-    #                 return False
-    #     return True
-    #
-    # def check_full_col(self, board, column):
-    #     # Returns True if there is an empty space in the given column.
-    #     # Otherwise returns False.
-    #     if (board[BOARDHEIGHT - 1][column] == -1):
-    #         return True
-    #     return False
 
     def display_update(self):
         pygame.display.update()
