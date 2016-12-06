@@ -22,6 +22,18 @@ class ClientThread(threading.Thread):
             if (cmd.lower() == 'start'):
                 print 'Sending Test to client'
 
+            if (cmd.lower() == 'removeuser'):
+                print 'Removing user'
+                username = server_data.recv(1024)
+
+                tmp = None
+                for game in self.database:
+                    if game[0] == username:
+                        tmp = game
+
+                self.database.remove(tmp)
+                print self.database
+                print 'User: ' + username + ' removed from database'
 
             if (cmd.lower() == 'getusers'):
                 print 'Get users request'
@@ -63,7 +75,6 @@ while True:
     newthread = ClientThread(ip, port, datalist)
     newthread.start()
     threads.append(newthread)
-
 
 for t in threads:
     t.join()

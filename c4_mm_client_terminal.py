@@ -62,8 +62,9 @@ def list_games():
 
     create_client_game(selected_game[1])
     server_data.send('removeuser')
-    server_data.send()
-    start_msg_service()
+    server_data.send(selected_game[0])
+    # start_msg_service()
+    startup()
 
 def start_msg_service():
     print 'starting msg service'
@@ -73,14 +74,13 @@ def start_server():
     print '******************** Starting C4 Server ********************\n'
     username = raw_input('Enter a username: ')
 
-
-
     server_data.send('postusers')
     server_data.send(username + '/' + host)
     print 'Game Published to Match Making Server\n'
     print 'Starting Game...'
     create_server_game()
-    start_msg_service()
+    # start_msg_service()
+    startup()
 
 def create_client_game(host):
 
