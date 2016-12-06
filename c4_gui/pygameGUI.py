@@ -4,14 +4,16 @@ from threading import Thread
 
 class Gui(Thread):
 
-    def __init__ (self, height, width):
+    def __init__ (self, height, width, playerNum = 0):
         global FPS, BOARDWIDTH, BOARDHEIGHT, SPACESIZE, FPSCLOCK, WINDOWWIDTH, WINDOWWIDTH
         global XMARGIN, YMARGIN, BRIGHTBLUE, WHITE, BGCOLOR, TEXTCOLOR, RED, BLACK, EMPTY
-        global playerOne, playerTwo
+        global playerOne, playerTwo, bg, playerNumber
 
         # Game Variables
         BOARDWIDTH = width  # how many spaces wide the board is
         BOARDHEIGHT = height  # how many spaces tall the board is
+
+        playerNumber = playerNum
 
         SPACESIZE = 50  # size of the tokens and individual board spaces in pixels
 
@@ -28,6 +30,9 @@ class Gui(Thread):
         BGCOLOR = BRIGHTBLUE
         TEXTCOLOR = WHITE
 
+        self.bg = pygame.image.load('background.jpg')
+
+
         RED = 'red'
         BLACK = 'black'
         EMPTY = -1
@@ -42,17 +47,23 @@ class Gui(Thread):
         self.REDPILERECT = pygame.Rect(int(SPACESIZE / 2), WINDOWHEIGHT - int(3 * SPACESIZE / 2), SPACESIZE, SPACESIZE)
         self.BLACKPILERECT = pygame.Rect(WINDOWWIDTH - int(3 * SPACESIZE / 2), WINDOWHEIGHT - int(3 * SPACESIZE / 2), SPACESIZE,
                                     SPACESIZE)
-        REDTOKENIMG = pygame.image.load('red.png')
-        self.REDTOKENIMG = pygame.transform.smoothscale(REDTOKENIMG, (SPACESIZE, SPACESIZE))
-        BLACKTOKENIMG = pygame.image.load('blue.png')
-        self.BLACKTOKENIMG = pygame.transform.smoothscale(BLACKTOKENIMG, (SPACESIZE, SPACESIZE))
+        if playerNum == 0:
+            REDTOKENIMG = pygame.image.load('red.png')
+            self.REDTOKENIMG = pygame.transform.smoothscale(REDTOKENIMG, (SPACESIZE, SPACESIZE))
+            BLACKTOKENIMG = pygame.image.load('blue.png')
+            self.BLACKTOKENIMG = pygame.transform.smoothscale(BLACKTOKENIMG, (SPACESIZE, SPACESIZE))
+        else:
+            REDTOKENIMG = pygame.image.load('blue.png')
+            self.REDTOKENIMG = pygame.transform.smoothscale(REDTOKENIMG, (SPACESIZE, SPACESIZE))
+            BLACKTOKENIMG = pygame.image.load('red.png')
+            self.BLACKTOKENIMG = pygame.transform.smoothscale(BLACKTOKENIMG, (SPACESIZE, SPACESIZE))
         BOARDIMG = pygame.image.load('grid.png')
         self.BOARDIMG = pygame.transform.smoothscale(BOARDIMG, (SPACESIZE, SPACESIZE))
 
-        self.HUMANWINNERIMG = pygame.image.load('4row_humanwinner.png')
-        self.COMPUTERWINNERIMG = pygame.image.load('4row_humanwinner.png')
+        self.PLAYERONEWIN = pygame.image.load('player_one_win.png')
+        self.PLAYERTWOWIN = pygame.image.load('player_two_win.png')
         self.TIEWINNERIMG = pygame.image.load('4row_tie.png')
-        self.WINNERRECT = self.HUMANWINNERIMG.get_rect()
+        self.WINNERRECT = self.PLAYERONEWIN.get_rect()
         self.WINNERRECT.center = (int(WINDOWWIDTH / 2), int(WINDOWHEIGHT / 2))
 
         self.ARROWIMG = pygame.image.load('4row_arrow.png')
@@ -61,10 +72,14 @@ class Gui(Thread):
         self.ARROWRECT.centery = self.REDPILERECT.centery
 
 
-    def mainLoop(self, board, winnerImg):
+    def mainLoop(self, board, winningPlayer):
+        print winningPlayer
         while True:
             self.drawBoard(board)
-            self.DISPLAYSURF.blit(winnerImg, self.WINNERRECT)
+            if winningPlayer == 0:
+                self.DISPLAYSURF.blit(self.PLAYERONEWIN, self.WINNERRECT)
+            elif winningPlayer == 1:
+                self.DISPLAYSURF.blit(self.PLAYERTWOWIN, self.WINNERRECT)
             pygame.display.update()
             self.FPSCLOCK.tick()
             for event in pygame.event.get():  # event handling loop
@@ -128,20 +143,25 @@ class Gui(Thread):
                     tokenx, tokeny = None, None
                     draggingToken = False
             if tokenx != None and tokeny != None:
-                self.drawBoard(board, {'x':tokenx - int(SPACESIZE / 2), 'y':tokeny - int(SPACESIZE / 2), 'color':RED})
+                if playerNumber == 0:
+                    self.drawBoard(board, {'x':tokenx - int(SPACESIZE / 2), 'y':tokeny - int(SPACESIZE / 2), 'color':RED})
+                elif playerNumber == 1:
+                    self.drawBoard(board, {'x': tokenx - int(SPACESIZE / 2), 'y': tokeny - int(SPACESIZE / 2), 'color': BLACK})
             else:
                 self.drawBoard(board)
 
             if isFirstMove:
                 # Show the help arrow for the player's first move.
                 self.DISPLAYSURF.blit(self.ARROWIMG, self.ARROWRECT)
+            else:
+                self.ARROWRECT.left = 1000
 
             pygame.display.update()
             self.FPSCLOCK.tick()
 
     def drawBoard(self, board, extraToken=None):
-        self.DISPLAYSURF.fill(BGCOLOR)
-
+        # self.DISPLAYSURF.fill(BGCOLOR)
+        self.DISPLAYSURF.blit(self.bg, (0, 0))
         # draw tokens
         spaceRect = pygame.Rect(0, 0, SPACESIZE, SPACESIZE)
         for y in range(0, BOARDWIDTH):
@@ -149,18 +169,29 @@ class Gui(Thread):
                 spaceRect.topleft = (XMARGIN + (y * SPACESIZE), YMARGIN + ((5 - x) * SPACESIZE))
                 #spaceRect.topleft = (YMARGIN + (y * SPACESIZE), XMARGIN + (x * SPACESIZE))
                 # print "Board at: " + str(x) + ", " + str(y) + " = " + str(board[x][y])
-                if board[x][y] == playerTwo:
-                    self.DISPLAYSURF.blit(self.REDTOKENIMG, spaceRect)
-                elif board[x][y] == playerOne:
-                    self.DISPLAYSURF.blit(self.BLACKTOKENIMG, spaceRect)
+                if playerNumber == 0:
+                    if board[x][y] == playerTwo:
+                        self.DISPLAYSURF.blit(self.REDTOKENIMG, spaceRect)
+                    elif board[x][y] == playerOne:
+                        self.DISPLAYSURF.blit(self.BLACKTOKENIMG, spaceRect)
+                elif playerNumber == 1:
+                    if board[x][y] == playerOne:
+                        self.DISPLAYSURF.blit(self.REDTOKENIMG, spaceRect)
+                    elif board[x][y] == playerTwo:
+                        self.DISPLAYSURF.blit(self.BLACKTOKENIMG, spaceRect)
 
         # draw the extra token
         if extraToken != None:
-            if extraToken['color'] == RED:
-                self.DISPLAYSURF.blit(self.REDTOKENIMG, (extraToken['x'], extraToken['y'], SPACESIZE, SPACESIZE))
-            elif extraToken['color'] == BLACK:
-                self.DISPLAYSURF.blit(self.BLACKTOKENIMG, (extraToken['x'], extraToken['y'], SPACESIZE, SPACESIZE))
-
+            if playerNumber == 0:
+                if extraToken['color'] == RED:
+                    self.DISPLAYSURF.blit(self.REDTOKENIMG, (extraToken['x'], extraToken['y'], SPACESIZE, SPACESIZE))
+                elif extraToken['color'] == BLACK:
+                    self.DISPLAYSURF.blit(self.BLACKTOKENIMG, (extraToken['x'], extraToken['y'], SPACESIZE, SPACESIZE))
+            elif playerNumber == 1:
+                if extraToken['color'] == BLACK:
+                    self.DISPLAYSURF.blit(self.REDTOKENIMG, (extraToken['x'], extraToken['y'], SPACESIZE, SPACESIZE))
+                elif extraToken['color'] == RED:
+                    self.DISPLAYSURF.blit(self.BLACKTOKENIMG, (extraToken['x'], extraToken['y'], SPACESIZE, SPACESIZE))
         # draw board over the tokens
         for x in range(BOARDWIDTH):
             for y in range(BOARDHEIGHT):

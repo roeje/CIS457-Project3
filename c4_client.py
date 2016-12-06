@@ -31,7 +31,7 @@ class Client(Thread):
         print 'Connected to server'
 
         self.game = c4_engine.Game(6, 7, 4)
-        self.gui = pygameGUI.Gui(6, 7)
+        self.gui = pygameGUI.Gui(6, 7, 1)
 
         self.gui.drawBoard(self.game.board)
         self.gui.display_update()
@@ -53,8 +53,13 @@ class Client(Thread):
                 self.gui.display_update()
                 if self.game.check_winner() == self.playerOne:
                     print 'Winner Found: Player One'
-                    winnerImg = self.gui.HUMANWINNERIMG
-                    self.gui.mainLoop(self.game.board, self.gui.HUMANWINNERIMG)
+                    winnerImg = self.gui.PLAYERONEWIN
+                    self.gui.mainLoop(self.game.board, 0)
+                    break
+                elif self.game.check_winner() == self.playerTwo:
+                    print 'Winner Found: Player One'
+                    winnerImg = self.gui.PLAYERONEWIN
+                    self.gui.mainLoop(self.game.board, 1)
                     break
                 self.turn = self.playerTwo  # switch to other player's turn
             else:
@@ -83,8 +88,13 @@ class Client(Thread):
                     self.showHelp = False
                 if self.game.check_winner() == self.playerTwo:
                     print 'Winner Found: Player Two'
-                    winnerImg = self.gui.HUMANWINNERIMG
-                    self.gui.mainLoop(self.game.board, self.gui.HUMANWINNERIMG)
+                    winnerImg = self.gui.PLAYERONEWIN
+                    self.gui.mainLoop(self.game.board, 1)
+                    break
+                elif self.game.check_winner() == self.playerOne:
+                    print 'Winner Found: Player One'
+                    winnerImg = self.gui.PLAYERONEWIN
+                    self.gui.mainLoop(self.game.board, 0)
                     break
                 self.turn = self.playerOne  # switch to other player's turn
 

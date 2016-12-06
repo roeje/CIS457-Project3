@@ -1,5 +1,5 @@
 from c4_lib import c4_io, c4_engine
-from c4_gui import pygameGUI#, menu_gui
+from c4_gui import pygameGUI, menu_gui
 import getopt
 import sys
 import random, copy, sys, pygame
@@ -31,8 +31,8 @@ def main():
                 showHelp = False
             if game.check_winner() == playerOne:
                 print 'Winner Found: Player One'
-                winnerImg = gui.HUMANWINNERIMG
-                gui.mainLoop(game.board, gui.HUMANWINNERIMG)
+                winnerImg = gui.PLAYERONEWIN
+                gui.mainLoop(game.board, gui.PLAYERONEWIN)
                 break
             turn = playerTwo  # switch to other player's turn
         else:
@@ -45,8 +45,8 @@ def main():
             if game.check_winner() == playerTwo:
 
                 print 'Winner Found: Player Two'
-                winnerImg = gui.HUMANWINNERIMG
-                gui.mainLoop(game.board, gui.HUMANWINNERIMG)
+                winnerImg = gui.PLAYERONEWIN
+                gui.mainLoop(game.board, gui.PLAYERONEWIN)
                 break
             turn = playerOne  # switch to other player's turn
 
@@ -54,7 +54,6 @@ def main():
 
             winnerImg = gui.TIEWINNERIMG
             break
-
 
 if __name__ == "__main__":
     main()
